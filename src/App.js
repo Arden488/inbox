@@ -1,3 +1,5 @@
+import firestore from "./firestore";
+
 import EditorJS from "@editorjs/editorjs";
 import Header from "@editorjs/header";
 import Delimiter from "@editorjs/delimiter";
