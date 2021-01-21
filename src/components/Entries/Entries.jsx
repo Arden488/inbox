@@ -1,10 +1,8 @@
-function Entries() {
+function Entries({ entries }) {
     return <div>
         <h1>All entries</h1>
         <ul>
-            <li><a href="">First entry</a></li>
-            <li><a href="">Second entry</a></li>
-            <li><a href="">Third entry</a></li>
+            {entries.map(entry => <li key={ entry.id }><a href="">{ entry.content }</a></li>)}
         </ul>
     </div>
 }
