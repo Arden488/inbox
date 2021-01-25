@@ -4,6 +4,8 @@ import { firestore } from "./firestore";
 import Entries from "./components/Entries/Entries";
 import Editor from "./components/Editor/Editor";
 
+import { collectIdsAndDocs } from "./utilities";
+
 import "./App.css";
 
 function App() {
@@ -13,12 +15,7 @@ function App() {
         async function fetchEntries() {
             const snapshot = await firestore.collection("entries").get();
 
-            const entries = snapshot.docs.map((doc) => {
-                return {
-                    id: doc.id,
-                    ...doc.data(),
-                };
-            });
+            const entries = snapshot.docs.map(collectIdsAndDocs);
 
             setEntries(entries);
         }
