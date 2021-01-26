@@ -14,17 +14,16 @@ function App() {
     useEffect(() => {
         async function fetchEntries() {
             const snapshot = await firestore.collection("entries").get();
-
             const entries = snapshot.docs.map(collectIdsAndDocs);
 
             setEntries(entries);
         }
         fetchEntries();
-    });
+    }, []);
 
     return (
         <div className="App">
-            <Entries entries={entries} />
+            {entries && <Entries entries={entries} />}
             <Editor />
         </div>
     );
