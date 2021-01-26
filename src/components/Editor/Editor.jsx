@@ -12,6 +12,7 @@ import Underline from "@editorjs/underline";
 import Paragraph from "editorjs-paragraph-with-alignment";
 
 import { collectIdsAndDocs } from "../../utilities";
+import { useState } from "react";
 
 const editor = new EditorJS({
     holder: "editorjs",
@@ -73,24 +74,28 @@ const editor = new EditorJS({
     },
 });
 
-function saveData() {
-    editor.isReady.then(() => {
-        editor.save().then(async (savedData) => {
-            const docRef = await firestore.collection('entries').add({
-                content: savedData.blocks
-            })
-            const doc = await docRef.get()
-
-            const newPost = collectIdsAndDocs(doc)
-
-            console.log(newPost)
-        });
-    });
-}
-
 function Editor() {
+    const [docTitle, setDocTitle] = useState("")
+
+    const saveData = () => {
+        editor.isReady.then(() => {
+            editor.save().then(async (savedData) => {
+                const docRef = await firestore.collection('entries').add({
+                    title: docTitle,
+                    content: savedData.blocks
+                })
+                const doc = await docRef.get()
+
+                const newPost = collectIdsAndDocs(doc)
+
+                console.log(newPost)
+            });
+        });
+    }
+
     return (
         <div>
+            <input type="text" name="doctitle" value={docTitle} onChange={e => setDocTitle(e.target.value)} placeholder="Enter the document's title" />
             <div className="editor-js-wrapper" id="editorjs"></div>
             <button
                 className="ce-example__button"
