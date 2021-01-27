@@ -17,6 +17,14 @@ main {
     margin-bottom: 20px;
     background: #efefef;
     padding: 10px 15px;
+    color: #333;
+    text-decoration: none;
+    transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+
+.entries__item:hover {
+    color: #000;
+    background-color: #ebebeb;
 }
 
 .entries__item:last-of-type {
