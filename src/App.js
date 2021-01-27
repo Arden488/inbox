@@ -10,6 +10,7 @@ import "./App.css";
 
 function App() {
     const [entries, setEntries] = useState([]);
+    const [isEditing, setIsEditing] = useState(false);
 
     useEffect(() => {
         async function fetchEntries() {
@@ -23,8 +24,10 @@ function App() {
 
     return (
         <div className="App">
-            {entries && <Entries entries={entries} />}
-            <Editor />
+            <main>
+                {entries && <Entries entries={entries} />}
+                {isEditing && <Editor />}
+            </main>
         </div>
     );
 }
