@@ -1,16 +1,15 @@
 function Entries({ entries }) {
-    console.log(entries)
     return <div>
-        <h1>All entries</h1>
-        <ul>
-            {entries.map(entry =>
-                <li key={entry.id}>
-                    <a href="">
-                        {entry.title || "Untitled"}
-                    </a>
-                </li>
-            )}
-        </ul>
+        <h2>All entries</h2>
+        {entries.map(entry => {
+            const date = new Date(entry.datetime * 1000)
+            const hasDate = date && date != "Invalid Date"
+
+            return <a href="javascript:void(0)" className="entries__item" key={entry.id}>
+                    {entry.title || "Untitled"}
+                    <span className="entries__item-date">{hasDate && date.toString()}</span>
+                </a>
+        })}
     </div>
 }
 
