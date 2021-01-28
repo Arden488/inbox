@@ -7,19 +7,29 @@ main {
     padding: 50px 0 0;
 }
 
+main {
+    display: grid;
+    grid-template-columns: 50% auto;
+    grid-column-gap: 20px;
+}
+
 .editor-js-wrapper {
-    background: #efefef;
+    /* background: #efefef; */
 }
 
 .entries__item {
+    margin-bottom: 20px;
+    padding: 10px 15px;
+    transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+    background: #efefef;
+}
+
+.entries__item-link {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 20px;
-    background: #efefef;
-    padding: 10px 15px;
+    margin-bottom: 10px;
     color: #333;
     text-decoration: none;
-    transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
 }
 
 .entries__item:hover {
