@@ -48,16 +48,37 @@ function App() {
         const doc = await firestore.doc(`entries/${id}`).get();
 
         // setIsEditing(true)
-        setActiveEntry(doc.data());
+        setActiveEntry(collectIdsAndDocs(doc));
     }
 
-    function handleCreate(newItem) {
-        console.log(newItem);
-        firestore.collection("entries").add({
-            title: newItem.title,
-            datetime: new Date(),
-            content: newItem.data.blocks,
+    function resetActiveEntry() {
+        setActiveEntry(null);
+    }
+
+    function startNewEntry() {
+        setActiveEntry({
+            title: "",
+            content: "",
         });
+    }
+
+    function handleSave(newItem) {
+        if (newItem.id) {
+            console.log("1", newItem);
+            const entryRef = firestore.doc(`entries/${newItem.id}`);
+            entryRef.update({
+                title: newItem.title,
+                content: newItem.data,
+            });
+        } else {
+            console.log("2", newItem);
+            firestore.collection("entries").add({
+                title: newItem.title,
+                datetime: new Date(),
+                content: newItem.data,
+            });
+        }
+
         setActiveEntry(null);
     }
 
@@ -85,18 +106,22 @@ function App() {
                 )}
             </header>
             <main>
-                <div>
-                    {entries && (
+                {entries && !activeEntry && (
+                    <div>
+                        <button onClick={startNewEntry}>New entry</button>
                         <Entries
                             entries={entries}
                             onOpen={handleOpen}
                             onRemove={handleRemove}
                         />
-                    )}
-                </div>
-                <div>
-                    <Editor onCreate={handleCreate} entry={activeEntry} />
-                </div>
+                    </div>
+                )}
+                {activeEntry && (
+                    <div>
+                        <button onClick={resetActiveEntry}>Back</button>
+                        <Editor onSave={handleSave} entry={activeEntry} />
+                    </div>
+                )}
             </main>
         </div>
     );
