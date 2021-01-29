@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { firestore } from "./firestore";
+import { firestore, auth, signInWithGoogle, signOut } from "./firestore";
 
 import Entries from "./components/Entries/Entries";
 import Editor from "./components/Editor/Editor";
@@ -12,26 +12,29 @@ function App() {
     const [entries, setEntries] = useState([]);
     // const [isEditing, setIsEditing] = useState(true);
     const [activeEntry, setActiveEntry] = useState(null);
+    const [user, setUser] = useState(null);
 
-    let unsubscribe = null;
+    let unsubscribeFromFirestore = null;
+    let unsubscribeFromAuth = null;
 
     useEffect(() => {
         async function fetchEntries() {
-            unsubscribe = firestore
+            unsubscribeFromFirestore = firestore
                 .collection("entries")
                 .onSnapshot((snapshot) => {
                     const entries = snapshot.docs.map(collectIdsAndDocs);
                     setEntries(entries);
                 });
-            // const snapshot = await firestore.collection("entries").get();
-            // const entries = snapshot.docs.map(collectIdsAndDocs);
 
-            // setEntries(entries);
+            unsubscribeFromAuth = auth.onAuthStateChanged((user) => {
+                setUser(user);
+                console.log(user);
+            });
         }
         fetchEntries();
 
         return () => {
-            unsubscribe();
+            unsubscribeFromFirestore();
         };
     }, []);
 
@@ -60,6 +63,27 @@ function App() {
 
     return (
         <div className="App">
+            <header>
+                {user ? (
+                    <div>
+                        <figure
+                            style={{
+                                width: "100px",
+                                height: "100px",
+                                textAlign: "center",
+                            }}
+                        >
+                            <img src={user.photoURL} alt={user.displayName} />
+                            <figcaption>{user.displayName}</figcaption>
+                        </figure>
+                        <button onClick={signOut}>Sign out</button>
+                    </div>
+                ) : (
+                    <button onClick={signInWithGoogle}>
+                        Sign in with Google
+                    </button>
+                )}
+            </header>
             <main>
                 <div>
                     {entries && (
